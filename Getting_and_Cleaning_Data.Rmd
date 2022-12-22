@@ -7,3 +7,19 @@ output: "pdf_document"
 # Week 1
 ## Obtaining Data Motivation
 ### Video Notes
+This course covers basic ideas behind getting data ready for analysis. 
+
+- Finding and extracting raw data
+- Tidy data principles and how to make data tiny
+- Practical implemenetation through a range of R packages
+
+What you'd desire is a nice format like an excel spreadsheet. 
+More commonly will get not nice data that requires parsing.  
+Can also get data in other formats like JSON. JSON is easy to send, but not to analyze.  
+Might need to extract from text files.  
+Might need to extract from databases such as mySQL, MongoDB.  
+Might be stored online or on computer such as on twitter API.  
+
+Pipeline: 
+Raw data -> Processing Script -> tidy data -> data analysis -> data communication
+Courses tend to scip raw through tidy data. 
