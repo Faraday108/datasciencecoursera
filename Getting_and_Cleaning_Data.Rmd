@@ -134,9 +134,90 @@ if(!file.exists("data")) {
   dire.create("data")
 }
 ```
-Get data from internet: download.file()
-Improves reproducibility
+### Get data from internet: download.file()
 
 * downloads from the internet
 * even if you can do this by hand, improves reproducibility
 * Important parameters are *url, destfile, method*
+* Useful for downloading tab-delimited, csv, and other files
+
+Example - Baltimore fixed camera data (speed cameras around Baltimore)
+```{r, eval = FALSE}
+fileUrl <- "https://data.baltimorecity.gov/api/views/dz54-2aru/rows.csv?accessType = DOWNLOAD"
+# method is important for downloading in Mac, maybe not on Windows
+download.file(fileUrl, destfile = "./data/cameras.csv", method = "curl")
+# Would list file named "cameras.csv" in "data" folder. 
+list.files("./data")
+```
+Good idea to include a data downloaded in file
+```{r}
+dateDownloaded <- date()
+dateDownloaded
+```
+Notes about download.file()
+
+* If url starts with *http* you can use download.file
+* If url starts with *https* on Windows you are ok
+* If url starts with *https* on Mac may need *method="curl"*
+* If file is big, may take a while
+* Be sure to record when you downloaded
+
+## Reading Local Files
+### Covered in R lectures
+Download file as above and check if directory "data" exists. 
+#### Loading flat files - read.table()
+
+* This is the main function for reading data into R
+* Flexible and robust but requires more parameters
+* Reads data into RAM - big dataset can cause problems
+* Important parameters *file, header, sep, row.names, nrows*
+* Related functions read.csv() and read.csv2()
+
+Baltimore example: 
+```{r, eval = FALSE}
+# Throws error because not ' ' delimited
+cameraData <- read.table("./data/camera.csv")
+# Change sep parameter
+cameraData <- read.table("./data/cameras.csv", sep = ",", header = TRUE)
+head(cameraData)
+```
+Can also use read.csv as this automatically sets sep = "," and head = TRUE
+Other important parameters: 
+
+* quote - you can tell R whether there are any quoted values quote = "" means no quote
+* na.strings - set the character that represents a missing value
+* nrows - how many rows to read of the file (nrows = 10 reads 10 rows)
+* skip - number of lines to skip before starting to read
+
+In instructor's experience: biggest problem with reading flat files are quotation marks placed in data values. Setting quote = "" often resolves these
+
+## Reading Excel Files
+May be viewed snobbishly, but still a very common way to have data saved in this format. Google spreadsheets for example. 
+Baltimore camera data: 
+```{r, eval = FALSE}
+if(!file.exists("data")){dir.create("data")}
+fileUrl <- "https://data.baltimorecity.gov/api/views/dz54-2aru/rows.xlsx?accessType=DOWNLOAD"
+download.file(fileUrl,destfile="./data/cameras.xlsx",method="curl)
+dateDownloaded<-date()
+```
+Need xlsx package (among others)
+```{r}
+library(xlsx)
+cameraData <- read.xlsx("./data/cameras.xlsx",sheetIndex=1,header=TRUE)
+head(cameraData)
+# Can subset data: col 2 & 3 and rows 1-4
+colIndex <- 2:3
+rowIndex <- 1:4
+cameraDataSubset <- read.xlsx("./data/cameras.xlsx",sheetIndex=1,
+  colIndex=colIndex,rowIndex=rowIndex)
+cameraDataSubset
+```
+#### Further Notes
+
+* write.xlsx function writes out Excel file with similar arguments
+* read.xlsx2 is much faster than read.xlsx but for reading subsets of rows may be slightly unstable. 
+* The XLConnect package has more options for writing and manipulating Excel files
+* The XLConnect vignette is a good place to start for that package
+* In general, it is advised to store your data in either a database, csv, or tab separated files as they are easier to distribute. 
+
+## Reading XML
