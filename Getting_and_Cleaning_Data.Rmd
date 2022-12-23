@@ -109,3 +109,34 @@ In some cases it will not be possible to script every step. In that case you sho
 3. Step 3 - Take column three of outputfile.out for each sample and that is the corresponding row in the output data set 
 
 When in doubt, include more information.  
+
+##Downloading Files
+In era of internet, most files will be from internet. Why use R to download? The information will then be included in script to support above initiatives.  
+Get and set working directory. 
+
+* A basic component of working with data is knowing your working directory
+* The two main components are `getwd()` and `setwd()`
+* Be aware of relative vs absolute paths
+  + Relative: `setwd("./data"), setwd("../")`
+  + ../ moves up one level
+  + Absolute: `setwd("/Users/jtleek/data/")`
+* Important difference in Windows: `setwd("C:\\Users\\Andrew\\Downloads")
+  + In windows, need to use forward slashes
+  
+First step is to check for and create directories
+
+* file.exists("DirectoryName") will check to see if the directory exists
+* dir.create("directoryName") will create a directory if it doesn't exist
+* Example of checking for a "data" directory and creating one if it doesn't exist. 
+
+```{r, eval = FALSE}
+if(!file.exists("data")) {
+  dire.create("data")
+}
+```
+Get data from internet: download.file()
+Improves reproducibility
+
+* downloads from the internet
+* even if you can do this by hand, improves reproducibility
+* Important parameters are *url, destfile, method*
