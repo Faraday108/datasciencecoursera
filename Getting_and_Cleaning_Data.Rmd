@@ -23,3 +23,89 @@ Might be stored online or on computer such as on twitter API.
 Pipeline: 
 Raw data -> Processing Script -> tidy data -> data analysis -> data communication
 Courses tend to scip raw through tidy data. 
+
+## Raw and Processed Data
+How can raw data be different depending on who you talk to?  
+Definition of data: "values of qualitative or quantitative variables, belonging to a set of items."  
+**Raw data:**
+
+* original source of data
+* often hard to use for data analysis, hard to parse
+* Data analysis *includes* processing
+* raw data may only need to be processed once (keep a record of what you did)
+
+**Processed Data:**
+
+* Data that is ready for analysis
+* can include merging, subsetting, transforming, etc. 
+* may be standards for processing 
+* all steps should be recorded!
+
+Processing pipeline example: An ilumina sequencing machine
+Starts with fragments of DNA bound to slide, chemical process that copies sequence, color of image changes in regions and this change is analyzed, producing a fast Q file where each segment of the data produces a sequence of letters. Any of these stages can be considered raw. How the raw data goes to tidy data can influence downstream analysis and it is important to understand what happened in the process so your analysis doesn't contain artifacts.  
+
+## Components of Tidy Data
+The target to get to from raw data. 
+Should have 4 things after going from raw to tidy:
+
+1. The raw data
+2. a tidy data set
+3. a code book describing each variable and its value in the tidy data set
+4. An explicit and exact recipe you used to go from 1 -> 2 & 3
+
+Your R script can be the recipe for step 4. 
+
+**Raw Data**
+
+* The strange binary file your measurement machine spits out
+* An unformatted Excel file with 10 worksheets the company you contracted with sent you
+* The complicated JSON data you got from scraping the Twitter API
+* The hand-entered numbers you collected looking through a microscope
+
+*You know the raw data is in the right format if you:*
+
+1. Ran no software on the data
+2. Did not manipulate any of the numbers in the data
+3. You did not remove any data from the dataset
+4. You did not summarize the data in any way
+
+**The tidy data**
+
+1. Each variable you measure should be in one column
+2. Each different observation should be in a different row
+3. Should be one table for each "kind" of variable
+4. If you have multiple tables, should include a column in table that allows them to be linked together. 
+
+*Other important tips*
+
+* Include a row at top of each file with variable names
+* Make variable names human readable (AgeAtDiagnosis instead of AgeDx)
+* In general, data should be saved in one file per table
+
+**The Code Book**
+Should include:
+
+1. Information about the variables (and units!) in the data set not contained in the tidy data. 
+2. Information about the summary choices you made
+3. Information about experimental study design you used
+
+*Other Important tips*
+
+* A common format for this document is a Word/text file
+* There should be a section called "Study Design" that has a thorough description of how you collected the data 
+* There must be a section called "Code Book" that descibes variables and units
+
+**The Instruction List**
+
+* Ideally a computer script (In R or Python)
+* Input for the script is the raw data
+* Output is processed tidy data
+* No parameters to the script (end user doesn't need to input anything)
+
+In some cases it will not be possible to script every step. In that case you should provide instructions like: 
+
+1. Step 1 - take the raw file, run version 3.1.2 of summarize software with parameters a = 1, b = 2, c = 3
+2. Step 2 - Run software separately for each sample
+3. Step 3 - Take column three of outputfile.out for each sample and that is the corresponding row in the output data set 
+
+When in doubt, include more information.  
