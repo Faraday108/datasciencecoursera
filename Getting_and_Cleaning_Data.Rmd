@@ -221,3 +221,68 @@ cameraDataSubset
 * In general, it is advised to store your data in either a database, csv, or tab separated files as they are easier to distribute. 
 
 ## Reading XML
+
+* Extensible markup language
+* Used to store structured data
+* particularly widely used in internet applications
+* extracting xml is basis for most web scraping
+* components
+  + Markup - labels that give the text structure
+  + Content - actual text of the document
+
+### Tags, elements, and attributes
+
+* Tags correspond to general labels
+  + Start tags <section>
+  + End tags </section>
+  + Empty tags <line-break />
+* Elements are specific examples of tags
+  + <Greeting> Hello, world </Greeting>
+* Attributes are componenets of label
+  + <img src="jeff.jpg" alt="instructor"/> (src and alt are attributes)
+  + <step number="3"> Connect A to B. </step> (number is attribute)
+
+Read the file into R
+```{r}
+library(XML)
+fileUrl <- "http://www.w3schools.com/xml/simple.xml"
+doc <- xmlTreeParse(fileUrl, useInternal = TRUE)
+rootNode <- xmlRoot(doc)
+xmlName(rootNode)
+names(rootNode)
+```
+### Directly access parts of XML document
+```{r}
+rootNode[[1]] # will contain food tags and information
+rootNode[[1]][[1]] # Enters first element then first element of that component
+```
+### Programatically extract parts of the file
+```{r}
+xmlSApply(rootNode, xmlValue)
+```
+### XPath
+
+* /node Top level node
+* //node Node at any level
+* node[@attr-name] Node with an attribute name
+* node[@attr-name='bob'] Node with attribute name attr-name='bob'
+
+For more: http://www.stat.berkeley.edu/~statcur/Workshop2/Presentations/XML.pdf
+
+### Get the items on the menu and prices
+```{r}
+xpathSApply(rootNode, "//name", xmlValue) #goes through and gets all nodes that have element of title //name
+xpathSApply(rootNode,"//price",xmlValue) #same, but with price
+```
+
+### Extract contents by attribute
+```{r}
+fileUrl <- "http://espn.go.com/nfl/team/_/name/bal/baltimore-ravens"
+doc <- htmlTreeParse(fileUrl, useInternal = TRUE) #need html tree parse
+scores <- xpathSApply(doc,"//li[@class='score']",xmlValue)
+teams <- xpathSApply(doc,"//li[@class='team-name']",xmlValue)
+scores
+teams
+```
+Official xml tutorials online. And an outstanding guide to XML package
+https://github.com/DataScienceSpecialization/courses/tree/master/03_GettingData/lectures
