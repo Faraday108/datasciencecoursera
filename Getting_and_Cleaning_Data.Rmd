@@ -391,3 +391,34 @@ Summary and Further Reading
   + http://stackoverflow.com/questions/13618488/what-you-can-do-with-data-frame-that-you-cant-in-data-table
 * Notes based on https://github.com/raphg/Biostat-578/blob/master/Advanced_data_manipulation.Rpres
 
+# Week 2
+## Reading from MySQL
+What is mySQL? It is a free and widely used open source database software for internet based applications. Data is structured in databases, tables within databases, and fields within tables. Each row is called a record. Check out wikipedia for more info on structure.  
+An example structure are tables containing info on a company with departments, managers, employees, salaries, titles, etc. Each of these contain data that are linked together and essentially each one is a dataframe.  
+The first step to using the mySQL package is to install mySQL at http://dev.mysql.com/doc/refman/5.7/en/installing.html where there are links to each operating system you could want to install on. 
+Before installing mySQL, need to install microsoft visuall c++ redistributible. 
+Then can install RMySQL: official instructions at http://biostat.mc.vanderbilt.edu/wiki/Main/RMySQL  
+
+Note: as a data scientist, you are usually handed a database and trying to get data out of it rather than creating a database. 
+
+Note: I haven't installed the packages yet! 
+```{r, eval = FALSE}
+ucscDB <- dbConnect(MySQL(), user = "genome",
+  host = "genome-mysql.cse.ucsc.edu")
+result <- dbGetQuery(ucscDB, "show databases;");dbDisconnect(ucscDb);
+hg19 <- dbConnect(MySQL(), user="genome", db="hg19",
+  host="genome-mysql.cse.ucsc.edu")
+allTables <- dbListTables(g19)
+length(allTables) #10949
+```
+Within the database, thee are a bunch of tables. Each table contains information about a particular item so you can list the fields of the dataset with `dbListFields`.  
+`dbReadTable` to read information from database into data.frame.  
+Often a huge amount of data stored in a database so you can select subsets of data such as with `query <- dbSendQuery(hg19, "select * from affyU133Plus2 where misMatches between 1 and 3:); fetch(query, n=10)` will only select 10 elements.  
+Full queries of mySQL are beyond scope of this course but you can find them in the MySQL documentation. 
+Further Resources: 
+
+* RMySQL vignette: http://cran.r-project.org/web/packages/RMySQL/RMySQL.pdf
+* List of commands: http://www.pantz.org/software/mysql/mysqlcommands.html
+  + In general, be careful with mysql commands
+* Nice blog post summarizing: http://www.r-bloggers.com/mysql-and-r/
+```
