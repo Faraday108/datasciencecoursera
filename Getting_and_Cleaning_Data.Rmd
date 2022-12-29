@@ -493,3 +493,53 @@ readA
   + http://www.bioconductor.org/packages/release/bioc/vignettes/rhdf5/inst/doc/rhdf5.pdf
 * HDF group has information on HDF5 in general at http://www.hdfgroup.org/HDF5/
 
+## Reading from the Web
+### Webscraping
+To programatically extract data from the HTML code of websites
+
+* It can be a great way to get data
+* Many websites have information you may want to programatically read
+* In some case, this is against the ToS of a website
+* Attempting to read too many pages too quickly can get your IP address blocked, be careful! 
+
+Get data off webpages with readLines()
+```{r}
+con <- url("http://scholar.google.com/citations?user=HI-I6C0AAAAJ&hl=en")
+htmlCode <- readLines(con)
+close(con) # Close connection after reading
+htmlCode # will be hard to read
+```
+Can help readability by parsing with XML
+Note that this method may need updated. 
+```{r}
+library(XML)
+url <- "http://scholar.google.com/citations?user=HI-I6C0AAAAJ&hl=en"
+html <- htmlTreeParse(url,useInternalNodes = TRUE)
+xpathSApply(html,"//title",xmlValue)
+```
+### GET from the httr package
+This works in comparison to XML package above! 
+```{r}
+library(httr)
+html2 <- GET("http://scholar.google.com/citations?user=HI-I6C0AAAAJ&hl=en")
+content2 <- content(html2, as="text") # extract content
+parsedHtml <- htmlParse(content2, asText = TRUE) # parse, will look exactly same as XML package
+```
+If you try to access a website that requires a password, you will get a 401 error but you can authenticate with the httr package. 
+```{r}
+pg2 <- GET("http://httpbin.org/basic-augh/user/passwd",authenticate("user","passwd"))
+pg2 # should be status 200
+names(pg2)
+```
+### Using handles
+You can assign a website a handle. Big advantage is you can then pass different paths within the website as well as not needing to reauthenticate again. 
+```{r}
+google = handle("http://google.com")
+pg1 <- GET(handle=google, path = "/")
+pg2 <- GET(handle=google, path = "search)
+```
+Notes and further resources: 
+
+* R Bloggers has a number of examples of web scraping at http://www.r-bloggers.com/?s=Web+Scraping
+* The httr help file has useful examples http://cran.r-project.org/web/packages/httr/httr.pdf
+* See later lectures on APIs
