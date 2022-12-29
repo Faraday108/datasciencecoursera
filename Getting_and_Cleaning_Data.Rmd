@@ -200,8 +200,8 @@ fileUrl <- "https://data.baltimorecity.gov/api/views/dz54-2aru/rows.xlsx?accessT
 download.file(fileUrl,destfile="./data/cameras.xlsx",method="curl)
 dateDownloaded<-date()
 ```
-Need xlsx package (among others)
-```{r}
+Need xlsx package (among others), ammend for Tidyverse
+```{r, eval = FALSE}
 library(xlsx)
 cameraData <- read.xlsx("./data/cameras.xlsx",sheetIndex=1,header=TRUE)
 head(cameraData)
@@ -243,7 +243,7 @@ cameraDataSubset
   + <step number="3"> Connect A to B. </step> (number is attribute)
 
 Read the file into R
-```{r}
+```{r, eval = FALSE}
 library(XML)
 fileUrl <- "http://www.w3schools.com/xml/simple.xml"
 doc <- xmlTreeParse(fileUrl, useInternal = TRUE)
@@ -252,12 +252,12 @@ xmlName(rootNode)
 names(rootNode)
 ```
 ### Directly access parts of XML document
-```{r}
+```{r, eval = FALSE}
 rootNode[[1]] # will contain food tags and information
 rootNode[[1]][[1]] # Enters first element then first element of that component
 ```
 ### Programatically extract parts of the file
-```{r}
+```{r, eval = FALSE}
 xmlSApply(rootNode, xmlValue)
 ```
 ### XPath
@@ -270,13 +270,13 @@ xmlSApply(rootNode, xmlValue)
 For more: http://www.stat.berkeley.edu/~statcur/Workshop2/Presentations/XML.pdf
 
 ### Get the items on the menu and prices
-```{r}
+```{r, eval = FALSE}
 xpathSApply(rootNode, "//name", xmlValue) #goes through and gets all nodes that have element of title //name
 xpathSApply(rootNode,"//price",xmlValue) #same, but with price
 ```
 
 ### Extract contents by attribute
-```{r}
+```{r, eval = FALSE}
 fileUrl <- "http://espn.go.com/nfl/team/_/name/bal/baltimore-ravens"
 doc <- htmlTreeParse(fileUrl, useInternal = TRUE) #need html tree parse
 scores <- xpathSApply(doc,"//li[@class='score']",xmlValue)
@@ -363,14 +363,14 @@ DT[, .N, by=x] # Will count instance of each letter of x, very quickly
 ```
 Keys: subset and sort table more rapidly than with df
 ```{r}
-DT <- data.table(x=rep("a","b","c"),each=100),y=rnorm(300))
+DT <- data.table(x=rep(c("a","b","c"),each=100),y=rnorm(300))
 setkey(DT,x)
 # subset on 'x' and looks for 'a'
 DT['a']
 ```
 Joins
 ```{r}
-DT1 <- data.table(x=c("a","a","b",dt1"),y=1:4)
+DT1 <- data.table(x=c("a","a","b","dt1"),y=1:4)
 DT2 <- data.table(x=c("a","b","dt2"),z=5:7)
 setkey(DT1,x); setkey(DT2,x)
 merge(DT1,DT2)
@@ -407,12 +407,12 @@ library(RMySQL)
 ucscDB <- dbConnect(MySQL(), user = "genome",
   host = "genome-mysql.cse.ucsc.edu")
 # note the "show databases;" is not an R command but a SQL
-result <- dbGetQuery(ucscDB, "show databases;");dbDisconnect(ucscDb);
+result <- dbGetQuery(ucscDB, "show databases;");dbDisconnect(ucscDB);
 # Connect to particular database hg19
 hg19 <- dbConnect(MySQL(), user="genome", db="hg19",
   host="genome-mysql.cse.ucsc.edu")
 # Find number of tables in it. 
-allTables <- dbListTables(g19)
+allTables <- dbListTables(hg19)
 length(allTables) #10949
 # Show column names within a particular table
 dbListFields(hg19,"affyU133Plus2")
@@ -421,7 +421,7 @@ dbGetQuery(hg19, "select count(*) from affyU133Plus2")
 # Get one table out as a data frame
 affyData <- dbReadTable(hg19, "affyU133Plus2")
 head(affyData)
-dbDisconnect(ucscDb)
+dbDisconnect(hg19)
 length(allTables) #10949
 ```
 Within the database, thee are a bunch of tables. Each table contains information about a particular item so you can list the fields of the dataset with `dbListFields`.  
@@ -450,9 +450,7 @@ Further Resources:
 
 ### R HDF5 package
 sourced from biocLite.R
-```{r}
-source("http://bioconductor.org/biocLite.R")
-biocLite("rhdf5")
+```{r, eval = FALSE}
 library(rhdf5)
 # For this lecture, we will create an exmample file. 
 created = h5createFile("example.h5")
@@ -481,12 +479,12 @@ h5ls("example.h5")
 readA = h5read("example.h5","foo/A")
 readB = h5read("example.h5","foo/foobaa/B")
 readdf = h5read("example.h5","df")
-ReadA
+readA
 
 # Reading and writing chunks
 # This will write the values 12, 13, 14 to the first three rows of column 1 of A
-h5write(c(12,13,14), "example.h5", "foo/A", index = list(1:3,1))
-h5read("example.h5","foo/A")
+#h5write(c(12,13,14), "example.h5", "foo/A", index = list(1:3,1))
+#h5read("example.h5","foo/A")
 ```
 ### Notes and further resources
 
