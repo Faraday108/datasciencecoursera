@@ -543,3 +543,29 @@ Notes and further resources:
 * R Bloggers has a number of examples of web scraping at http://www.r-bloggers.com/?s=Web+Scraping
 * The httr help file has useful examples http://cran.r-project.org/web/packages/httr/httr.pdf
 * See later lectures on APIs
+
+## Reading from APIs
+Application programming interfaces. Most internet companies like Twitter or Facebook will have an API where you can download data. For example, you can get data on what is tweeting.  
+Usually the first thing you'll need to do is create an account with the API at the account of each organization. https://dev.twitter.com/apps
+Accessing Twitter from R
+```{r, eval = FALSE}
+# Authenticate app
+myapp <- oauth_app("twitter", key = "yourConsumerKeyHere", 
+    secret = "yourConsumerSecretHere")
+# Sign in
+sig <- sign_oauth1.0(myapp,
+    token = "yourTokenhere",
+    token_secret = "yourTokenSecretHere")
+# Extra things that he want's to analyze, his home timeline, will get the page contaiing the JSON data
+homeTL <- GET("https://api.twitter.com/1.1/statuses/home_timeline.json",sig)
+```
+You'll have to convert the JSON you get as a dataframe.  
+
+In general, look at the documentation. 
+
+* httr allows GET, POST, PUT, and DELETE requests if you are authorized
+* you can authenticate with a username or a password
+* most modern APIs use something like oauth
+* httr works well with facebook, google, twitter, github, etc. 
+
+If you go to httr demo component on GitHub you can see a bunch of examples of how to access API's of different websites. 
