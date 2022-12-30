@@ -569,3 +569,55 @@ In general, look at the documentation.
 * httr works well with facebook, google, twitter, github, etc. 
 
 If you go to httr demo component on GitHub you can see a bunch of examples of how to access API's of different websites. 
+
+## Reading from other sources
+### There is an R package for that
+
+* Roger has a nice video on how there are R packages for most things that you will want to access
+* Interesting packages to follow
+* In general, best way to find if an R package exists is to google "data storage mechanism R package" ie "MySQL R Package"
+
+### Interacting more directly with files
+
+* file - open a connection to a text file
+* url - open a connection to a url
+* gzfile - open a connection to a .gz file
+* bzfile - open a connection to a .bz2 file
+* ?connections for more information
+* **remember to close connections**
+
+### Foreign package
+
+* Loads data from Minitab, S, SAS, SPSS, Stata, Systat
+* basic functions are *read.foo*
+  + read.arft (Weka)
+  + read.dta (Stata)
+  + read.mtp (Minitab)
+  + read.octave (Octave)
+  + read.spss (SPSS)
+  + read.xport (SAS)
+* See the help page for more details: http://cran.r-project.org/web/packages/foreign/foreign.pdf
+
+### Other database packages
+
+* RPostresSQL, RODBC, RMongo
+
+### Reading Images
+
+* jpeg - http://cran.r-project.org/web/packages/jpeg/index.html
+* readbitmap - http://cran.r-project.org/web/packages/readbitmap/indes.html
+* png - http://cran.r-project.org/web/packages/png/index.html
+* EBImage (Bioconductor) - http://wwww.bioconductor.org/packages/2.13/bioc/html/EBImage.html
+
+### Reading GIS data
+Geographic information systems
+
+* rdgal - http://cran.r-project.org/web/packages/rgdal/index.html
+* rgeos - http://cran.r-project.org/web/packages/rgeos/index.html
+* raster - http://cran.r-project.org/web/packages/raster/index.html
+
+### Reading Music Data
+
+* tuneR - http://cran.r-project.org/web/packages/tuneR/
+* seewave - http://rug.mnhn.fr/seewave/
+
