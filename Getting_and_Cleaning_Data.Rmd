@@ -621,3 +621,65 @@ Geographic information systems
 * tuneR - http://cran.r-project.org/web/packages/tuneR/
 * seewave - http://rug.mnhn.fr/seewave/
 
+# Week 3
+## Subsetting and Sorting
+Once data is loaded into R, you will likely want to manipulate it to be a tidy data set. Variables in columns, observations in rows.  
+Subsetting - quick review from r programming class
+```{r}
+set.seed(13435)
+X <- data.frame("var1"=sample(1:5), "var2"=sample(6:10), "var3"=sample(11:15))
+X <- X[sample(1:5),];X$var2[c(1,3)] = NA
+X
+# Column subset
+X[,1]
+# Column subset with variable name
+X[,"var1"]
+# Subset row and column simultaneously
+# row 1 through 2 and variable "var2"
+X[1:2, "var2"]
+
+# Logicals ands and ors
+# Find rows where var1 <=3 and var3 > 11 is true
+X[(X$var1 <= 3 & X$var3 > 11),]
+# Find rows where var1 <= 3 or var3 > 15
+X[(X$var1 <= 3 | X$var3 > 15),]
+
+# Dealing with missing values
+# Subsetting on NA's will not give actual rows, use which command as
+# this doesn't return NA's
+X[which(X$var2 > 8),]
+
+# Sorting
+sort(X$var1)
+# decreasing order
+sort(X$var1, decreasing = TRUE)
+# send NA's to end
+sort(X$var2, na.last = TRUE)
+
+# Order by a variable (sort rows)
+X[order(X$var1),]
+# Multiple variables ordered, var1 first then var3 as tiebreaker
+X[order(X$var1,X$var3),]
+
+# Can do same thing with plyr
+library(plyr)
+# order X by var1
+arrange(X,var1)
+# Decreasing
+arrange(X,desc(var1))
+
+# adding rows and columns
+# Same length 
+X$var4 <- rnorm(5)
+X
+# Use cbind instead
+# can bind to either side by changing order
+Y <- cbind(X,rnorm(5))
+# can use rbind, order logically same. 
+```
+
+### notes and further resources
+
+* R Programming in the Data Science Track
+* Andrew Jaffe's lecture notes http://www.biostat.jhsph.edu/~ajaffe/lec_winterR/Lecture%202.pdf
+
