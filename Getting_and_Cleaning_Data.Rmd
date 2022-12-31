@@ -683,3 +683,64 @@ Y <- cbind(X,rnorm(5))
 * R Programming in the Data Science Track
 * Andrew Jaffe's lecture notes http://www.biostat.jhsph.edu/~ajaffe/lec_winterR/Lecture%202.pdf
 
+## Summarizing Data
+Key aspect of data cleaning is loading data into R and finding quirks, weird issues, missing values, or other problems that you need to address before doing downstream analysis. 
+Example from boston data set on restaurants. Note the original link in the notes doesn't work, found a copy of the dataset on GitHub. 
+```{r}
+library(RCurl)
+if(!file.exists("./data")){dir.create("./data")}
+fileURL <- getURL("https://gist.githubusercontent.com/slowteetoe/528c78213fcd80f05419/raw/e0a4a89476fca79e692df1a373e5025f5112a5f6/restaurants.csv")
+download.file(fileURL, destfile = "./data/restaurants.csv",method="curl")
+restData <- read.csv("./data/restaurants.csv")
+# to see a reasonable amount of the dataframe, use head()
+head(restData,n=3)
+# to see end of datframe, use tail()
+tail(restData,n=3)
+# Get overall summary: 
+# count for characters, summary stats for integers
+summary(restData)
+# str(restData) for more info
+str(restData)
+# variability 
+quantile(restData$councilDistrict,na.rm=TRUE)
+quantile(restData$councilDistrict,probs=c(0.5, 0.75, 0.9))
+
+# summary tables of specific tables to find issues
+# useNA if any tells you if any missing values
+table(restData$zipCode,useNA="ifany")
+# 2D table, district vs zip code
+table(restData$councilDistrict,restData$zipCode)
+
+# Check for missing values
+sum(is.na(restData$councilDistrict))
+any(is.na(restData$councilDistrict)) # checks if any are NA
+all(restData$zipCode > 0)
+
+# Row and col sum
+colSums(is.na(restData))
+all(colSums(is.na(restData))
+
+# Values with specific characteristics
+table(restData$zipCode %in% c("21212"))
+table(restData$zipCode %in% c("21212","21213"))
+# Use logical to subset dataset
+head(restData[restData$zipCode %in% c("21212","21213"),])
+
+# Cross tabs (summaries)
+data(UCBAdmissions)
+DF <- as.data.frame(UCBAdmissions)
+summary(df)
+xt <- xtabs(Freq ~ Gender + Admit, data = DF)
+
+# Flat tables
+warpbreaks$replicate <- rep(1:9, len=54)
+# * denotes all other data in dataset, would be difficult to see due to size
+xt <- xtabs(breaks ~ .,data = warpbreaks)
+# summarize to flat table
+ftable(xt)
+
+# Size of a data set
+fakeData <- rnorm(1e5)
+object.size(fakeData)
+print(object.size(fakeData),units="Mb")
+```
