@@ -824,3 +824,65 @@ Notes and further reading:
 * Tutorial from developer of plyr - http://plyr.had.co.nz/09-user/
 * Andrew Jaffe's R Notes http://www.biostat.jhsph.edu/~ajaffe/lec_winterR/Lecture%202.pdf
 
+## Reshaping Data
+Data often comes in a weird format, variable in rows, observation in columns etc. May need to reshape to format. Recall goal of tidy data: 
+
+1. Each variable forms a column
+2. Each observation forms a row
+3. Each table/file stores data about one kind of observation
+
+### Start with Reshaping
+```{r}
+library(reshape2)
+# standard R dataset
+head(mtcars)
+
+# melt data frame
+mtcars$carname <- rownames(mtcars)
+# takes a list of id variables and measure variables
+# melted to be tall and skinny with one column of variables containing
+# both mpg and hp
+carMelt <- melt(mtcars,id = c("carname","gear',"cyl"), measure.vars = c("mpg","hp"))
+head(carMelt,n=3)
+tail(carMelt,n=3)
+```
+Now that it's melted, we can recast it to different shapes. 
+```{r}
+# Will show the cylinders broken down by the different variables
+cylData <- dcast(carMelt, cyl ~ varaible)
+cylData
+# passing mean to dcast
+cylData <- dcast(carMelt, cyl ~ variable, mean)
+cylData
+```
+Averaging values over a particular factor
+```{r}
+head(InsectSprays)
+tapply(InsectSprays$count, InsectSprays$spray, sum)
+
+# Via split, apply, combine
+spIns <- split(InsectSprays$count, InsectSprays$spray)
+spIns
+sprCount <- lapply(spIns,sum)
+sprCount
+unlist(sprCount)
+# alternatively
+sapply(spIns,sum)
+
+# With plyr package
+ddply(InsectSprays, .(spray), summarize,sum = sum(count))
+
+spraySums <- ddply(InsectSprays,.(spray),summarize,sum=ave(count,FUN=sum))
+dim(spraySums)
+head(spraySums)
+```
+More Information
+
+* A tutorial from the developer of plyr http://plyr.had.co.nz/09-user/
+* Nice reshape tutorial http://www.slideshare.net/jeffreybreen/reshaping-data-in-r
+* Good plyr primer http://www.r-bloggers.com/a-quick-primer-on-split-apply-combine-problems/
+* See also the functions
+  + acast - for casting as multidimensional arrays
+  + arrange - for faster reordering without using order() commands
+  + mutate - adding new variables
+
