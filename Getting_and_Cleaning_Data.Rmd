@@ -886,3 +886,134 @@ More Information
   + arrange - for faster reordering without using order() commands
   + mutate - adding new variables
 
+## Managin Data Frames with dplyr
+Pronounced D-plier, packaged to help with dataframes
+Data frame is key data structure in statistics and in R. 
+
+* assumption in plyr: one observation per row
+* assumption in plyr: each column represents a variable or measure or characteristic
+* primary implementation that you will use is the default R implementation
+* Can use with other implementations, particularly relational databases systems
+
+* Developed by Hadley Wickham of RStudio
+* An optimized and distilled version of plyr (also by Hadley)
+* Does not provide any 'new' functionality, but *greatly* simplifies existing functionality in R
+* Provides a 'grammar' for data manipulation
+* Is *very* fast, many key operations are coded in C++
+
+Verbs: 
+
+* select: return a subset of columns of a dataframe
+* filter: extract a subset of rows based on logical conditions
+* arrange: reorder rows
+* rename: rename variables
+* mutate: add new variables (columns) or transform existing
+* summarise: generage summary statistics of different variables, possibly within strata
+* Handy print method to prevent from printing a lot to console. 
+
+Properties
+
+* First argument is a dataframe
+* Susequent arguments describe what to do with it, and you can refer to columns in the df directly without using the $ operator
+* Result is a df
+* df must be properly formatted and annotated for this to be at all useful
+
+## Managing df with dplyr - Basic Tools
+```{r}
+chicago <- readRDS("chicago.rds")
+dim(chicago)
+str(chicago)
+names(chicago)
+# look at columns by name! city to dptp
+head(select(chicago, city:dptp))
+# Look at all columns except
+head(select(chicago, -(city:dptp))
+# without dplyr, need to find indexes
+i <- match("city",names(chicago))
+j <- match("dptp",names(chicago))
+head(chicago[, -(i:j)])
+
+# Filter subset rows based on conditions
+chic.f <- filter(chicago, pm25tmean2 > 30)
+head(chic.f)
+# Can do complex logical sequences
+chic.f <- filter(chicago, pm25tmean > 30 & tmpd > 80)
+head(chic.f)
+
+# arange by date
+chicago <- arrange(chicago, date)
+head(chicago)
+tail(chicago)
+# reverse order
+chicago arrange(chicago, desc(date))
+head(chicago)
+tail(chicago)
+
+# rename, hard without dplyr
+chicago <- rename(chicago, pm25=pm25mean2, dewpoint=dptp)
+head(chicago)
+
+# mutate, create new variable called 2.5detrend
+chicago <- mutate(chicago, pm25detrend = pm25 - miean(pm25, na.rm = TRUE))
+head(select(chicago, pm25, pm25detrend))
+
+chicago <- mutate(chicago, tempcat = factor(1 * (tmpd > 80), labels = c("cold", "hot")))
+hotcold <- group_by(chicago, tempcat)
+summarize(hotcold, pm25 = mean(pm25, na.rm = TRUE), o3 = max(o3tmean2), no2 = median(no2tmean2))
+
+chicago <- mutate(chicago, year = as.POSIXlt(date).year)
+years <- group_by(chicago, year)
+summarize(years, pm25 = mean(pm25, na.rm = TRUE), o3 = max(o3tmean2), no2 = median(no2tmean2))
+
+# %>% pipeline operator 
+chicago %>% mutate(month = POSIXlt(date)$mon + 1) %>% group_by(month) %>% summarize(pm25 = mean(pm25, na.rm = TRUE), o3 = mean(o3tmean2), no2 = median(no2tmean2))
+# handy tool to eliminate assigning a lot of intermdiate variables
+```
+Once you learn dplyr "grammar" there are additional benefits. dplyr can work with other data frame "backends" such as SQL databases. data.table for fast large tables. 
+
+## Merging Data
+Sometimes you will have multiple data sets loaded into R and will want to match them according to some ID. Similar to idea of linked tables in MySQL.  
+Peer review experiment data.  
+```{r}
+if(!file.exists("./data")){dir.create("./data")}
+fileUrl1 <- "https://dl.dropboxusercontent.com/u/7710864/data/reviews-apr29.csv"
+fileUrl1 <- "https://dl.dropboxusercontent.com/u/7710864/data/solutions-apr29.csv"
+download.file(fileUrl1, destfile = "./data/reviews.csv",method = "curl")
+download.file(fileUrl2, destfile = "./data/solutions.csv",method = "curl")
+reviews <- read.csv("./data/reviews.csv")
+solutions <- read.csv("./data/solutions.csv")
+
+# Both these dataframes has matching id's. 
+```
+Merge command has important parameters: x and y (data frames) and use by.x or by.y and will merge by all columns that have the same name. We can tell it which veriables to merge on. 
+```{r}
+mergedData <- merge(reviews,solutions, by.x = "solution_id", by.y = "id", all = TRUE)
+head(mergedData)
+```
+Default - merge on all common column names
+```{r}
+# The common names are "id", "start", "stop", "time_left"
+intersect(names(solutions), names(reviews))
+```
+The problem is these don't refer to the same things across both data frames so they will merge to have rows that are improperly merged.  
+Can also use join in plyr package. Will be faster, but less robust. Can only merge by names with same names.  
+```{r}
+df1 <- data.frame(id = sample(1:10), x = rnorm(10))
+df2 <- data.frame(id = sample(1:10), y = rnorm(10))
+# Will join by id (randomized in above), arrange puts them in order. 
+arrange(join(df1, df2), id)
+```
+If you have multiple df, it is difficult to do with merge. If they all have a common id though, it is easier in plyr. 
+```{r}
+df1 <- data.frame(id = sample(1:10), x = rnorm(10))
+df2 <- data.frame(id = sample(1:10), y = rnorm(10))
+df3 <- data.frame(id = sample(1:10), z = rnorm(10))
+# put them all in a list, then join_all
+dfList = list(df1, df2, df3)
+join_all(dfList)
+```
+More on merging data
+
+* QUick R data merging page: http://www.statmetods.net/management/merging.html
+* plyr information: http://plyr.had.co.nz/
+* Types of joins: http://en.wikipedia.org/wiki/Join_(SQL), worth paying attention to before you do a bunch of joins
