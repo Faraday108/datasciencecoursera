@@ -1106,3 +1106,70 @@ Important points about text in data sets
 * Variables with character values
   + Should usually be made into factor variables (depends on application)
   + Should be descriptive (use TRUE/FALSE instead of 0/1 and Male/Female verses 0/1 or M/F)
+
+I lost notes due to forgetting to save. There was a substantial section on regex for which a reference sheet can be found. https://evoldyn.gitlab.io/evomics-2018/ref-sheets/R_strings.pdf
+
+## Working with dates
+Can be quirky. 
+Starting simple: 
+```{r}
+d1 <- date()
+d1 #current date
+class(d1) # character
+
+d2 <- Sys.Date()
+d2 # current date
+class(d2) # date
+```
+The date class will make some things easier but others harder. 
+Formatting dates: 
+
+* %d = day as number(0-31)
+* %a = abbreviated workday
+* %A = unabbreviated workday
+* %m = month (00-12)
+* %b = abbreviated month
+* %B = unabbreviated month
+* %y = 2 digit year
+* %Y = 4 digit year
+
+```{r}
+format(d2, "%a %b %d")
+```
+
+Changing a character vector to dates
+```{r}
+x <- c("1jan1960:, "31mar1960", "30jul1960"); z <- as.Date(x, "%d%b%Y")
+# Can now do operations on the dates!
+z[1] - z[2] # Time difference of -1 days
+
+as.numeric(z[1] - z[2])
+```
+Converting to Julian
+```{r}
+weekdays(d2)
+months(d2)
+julian(d2)
+```
+Lubridate makes dates even easier! Has functions that will look for dates in a wide variety of formats automatically. 
+```{r}
+library(lubridate); 
+ymd("20140108")
+mdy("08/04/2013")
+dmy("03-04-03")
+ymd_hms("2011-08-03 10:15:03")
+ymd_hms("2011-08-03 10:15:03", tz = "Pacific/Auckland") # set timezone
+?Sys.timezone
+```
+Some functions may have slightly different syntax. 
+```{r}
+x <- dmy(c("1jan2013", "2jan2013", "31mar2013","30jul2013"))
+wkday(x[1]) # gives number
+wkday(x[1], label = TRUE)
+```
+
+Notes and further resources: 
+
+* More info on lubridate: http://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/
+* Lubridate vignette: http://cran.r-project.org/web/packages/lubridate/vignettes/lubridate.html
+* Ultimately you want your dates and times as class "Date" or classes "POSIXct","POSIXlt". 
