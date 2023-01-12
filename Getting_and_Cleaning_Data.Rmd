@@ -1109,6 +1109,17 @@ Important points about text in data sets
 
 I lost notes due to forgetting to save. There was a substantial section on regex for which a reference sheet can be found. https://evoldyn.gitlab.io/evomics-2018/ref-sheets/R_strings.pdf
 
+## Regex abbreviated
+Regular expressions are a combination of literals and metacharacters. Can be thought of as literal text forming words and metacharacters defining grammar. 
+Metacharacters: 
+
+* "^i think" start of line
+* "morning$" end of line
+* "[Bb][Uu][Ss][Hh]" set of characters (a character class)
+  + combine: "^[Ii] am" set of characters at beginning
+  + "[0-9]": range of characters
+  + "[^?.]$" ^ inside character class is negation. Will look at end of line for anything other than a period or question mark
+
 ## Working with dates
 Can be quirky. 
 Starting simple: 
