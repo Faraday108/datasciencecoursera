@@ -1184,3 +1184,55 @@ Notes and further resources:
 * More info on lubridate: http://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/
 * Lubridate vignette: http://cran.r-project.org/web/packages/lubridate/vignettes/lubridate.html
 * Ultimately you want your dates and times as class "Date" or classes "POSIXct","POSIXlt". 
+
+## Data Resources
+Free data you can do analysis on
+
+Open Government Sites: 
+
+* UN: http://data.un.org/
+* US: http://www.data.gov/
+* UK: http://data.gov.uk/
+* France: http://www.data.gouv.fr/
+* Ghana: http://data.gov.gh/
+* Australia: http://data.gov.au/
+* Germany: http://www.govdata.de/
+* Hong Kong: http://www.gov.hk/en/theme/psi/datasets/
+* Japan: http://www.gov.go.jp/
+* Many More: http://www.data.gov/opendatasites
+
+Gapminder: http://www.gapminder.org
+Human health
+
+Survey Data: http://www.asdfree.com
+
+Infochimps: http://www.infochimps.com/marketplace
+
+Kaggle: http://www.kaggle.com
+
+Collections by famous data scientists: 
+Research quality
+* Hilary Mason: http://bitly.com/bundles/hmason/1
+* Peter Skomoroch http://delicious.com/pskomoroch/dataset
+* Jeff Hammerbacher http://www.quora.com/Jeff-Hammerbacher/Introduction-to-Data-Science-Data-Sets
+* Gregory Piatetsky-Shapiro http://www.kdnuggets.com/gps.html
+* http://blog.mortardata.com/post/67652898761/6-dataset-lists-curated-by-data-scientists
+
+More specialized collections: 
+
+* Stanford Large Network Data
+* UCI Machine learning
+* KDD Nugets Datasets
+* CMU Statlib (canonical)
+* Gene expression omnibus
+* ArXiv Data
+* Public data sets on amazon web service
+
+API's:
+
+* twitter and twitteR package
+* figshare and rfigshare
+* PLoS and rplos
+* rOpenSci
+* Facebook and RFacebook
+* Google maps and RGoogleMaps
