@@ -1,0 +1,6 @@
+---
+title: "Exploratory Data Analysis"
+author: "Nathan Young"
+output: pdf_document
+---
+In this document, I'm taking notes based off the Coursera course Exploratory Data Analysis in the 
