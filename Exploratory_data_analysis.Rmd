@@ -18,3 +18,26 @@ It is a good idea when working on a class or project to create a folder that you
 To find what is in workspace: ls()
 
 If a R file is saved in the working directory (visible when running dir()), you can source it to load its contents to the workspace with source("filename")
+
+### Principles of Analytic Graphics
+Based on book by Edward Tuffey, Beautiful Evidence, with the following principles. 
+
+1. Show Comparisons
+  + Evidence for a hypothesis is always *relative* to another competing hypothesis
+  + Always ask "compared to what?" Evidence is relative
+
+In boxplot example of an air cleaner vs change in asthma symptom free days, what are we comparing to? We need to compare to a control (or something eise) so we can see the impact of the treatment. 
+
+2. Show causality, mechanism, explanation, systematic structure. 
+  + What is your causal framework for thinking about a question? 
+
+In prior example of air cleaner and asthma days, what improves their symptoms? Hypothesize that air cleaner is removing particulate matter and improving symptoms. So we might also show a plot of fine particulate matter in control vs air cleaner. This allows us to say that not only do symptoms decrease but the air is cleaner linking the particulate matter and symptoms.  
+
+3. Show multivariate data
+  + multivariate means more than two variables. 
+  + The real world is multivariate
+  + Need to "escape flatland"
+
+This rule boils down to show as much data on a single plot as you can. And the reason is because the world is inherently multivariate, including more information on a plot better mirrors the world. 
+
+Example plot of concentration of particulate matter vs daily mortality in NYC from 1987 till 2000. Overall slight negative association between PM10 levels and mortality. Regression line slopes downward slightly. Could hypothesize that lower airpollution is associated with higher mortality but if you include additional confounding variables such as season it can change the picture. 
