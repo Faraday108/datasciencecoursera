@@ -3,4 +3,18 @@ title: "Exploratory Data Analysis"
 author: "Nathan Young"
 output: pdf_document
 ---
-In this document, I'm taking notes based off the Coursera course Exploratory Data Analysis in the 
+In this document, I'm taking notes based off the Coursera course Exploratory Data Analysis. 
+
+## Week 1
+### Setting Your Working Directory (Windows)
+To find current working directory: getwd().
+
+The working directory is where R finds all of its files for reading and writing on your computer. When you read data or write things out using functions or write.csv, they will be read or written to your home, your working directory. 
+
+To find files in current working directory: dir()
+
+It is a good idea when working on a class or project to create a folder that you store everything in for the project and set this folder as the working directory. 
+
+To find what is in workspace: ls()
+
+If a R file is saved in the working directory (visible when running dir()), you can source it to load its contents to the workspace with source("filename")
