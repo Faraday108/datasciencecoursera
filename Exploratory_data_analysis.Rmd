@@ -58,3 +58,39 @@ Preserve the code that made the plot and the souces of where you got the data to
   + Analytical presentation ultimately stand or fall depending on the quality, relevance, and integrity of their content. 
 
 What's the story, what's the data, whats the best way to present it? 
+
+### Exploratory Graphics
+How to construct graphs for yourself so you can look at the data and explore what's going on in data ses youre looking at. 
+
+Why do we use graphs in data analysis? 
+
+* To understand data properties
+* To find patterns in data
+* To suggest modeling strategies
+* To 'debug' analyses
+* To communicate results
+
+Exploratory graphs are used for the first 4. 
+
+Characteristic of exploratory graphs. 
+
+* Made quickly
+* A large number are made
+* Goal is for personal understanding
+* Axes/legends are generally cleaned up later
+* Color/size primarily used for information
+
+Example with real data set on pollution. Question: are there any counties in the US that exceed the standard of 12ug/m3 for fine particle pollution? Downloaded and cleaned already for example. 
+
+Simple summaries of data:
+
+* One dimension: five-number summary, boxplots, histograms, density plot, barplot. 
+
+summary() produces a 5 number summary of min, 1st quartile, median, mean, 3rd quartile, and max. 
+boxplot(data, col = "blue") will creaet a boxplot
+abline(h = y) creates a horizontal line on boxplot
+hist(data, col = "green") for a histogram
+rug(data) plots points under the histogram, helps see outliers. 
+Can change breaks on a histogram with breaks = n. Don't want bins to be too big or else its noisy, or too small or you can't see shape. 
+Can put abline on histogram too, example has two: one at max of 12 and another at median. 
+barplot() can show a graphical summary for categorical data. For example plotting over region shows number of counties in the west and east.
