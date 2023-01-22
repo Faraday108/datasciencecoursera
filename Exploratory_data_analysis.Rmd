@@ -40,4 +40,21 @@ In prior example of air cleaner and asthma days, what improves their symptoms? H
 
 This rule boils down to show as much data on a single plot as you can. And the reason is because the world is inherently multivariate, including more information on a plot better mirrors the world. 
 
-Example plot of concentration of particulate matter vs daily mortality in NYC from 1987 till 2000. Overall slight negative association between PM10 levels and mortality. Regression line slopes downward slightly. Could hypothesize that lower airpollution is associated with higher mortality but if you include additional confounding variables such as season it can change the picture. 
+Example plot of concentration of particulate matter vs daily mortality in NYC from 1987 till 2000. Overall slight negative association between PM10 levels and mortality. Regression line slopes downward slightly. Could hypothesize that lower airpollution is associated with higher mortality but if you include additional confounding variables such as season it can change the picture. When broken down to each season, there is now a slight positive correlation (simpson's paradox)
+
+4. Integration of evidence
+  + Completely integrate words, numbers, images, and diagrams
+  + Data graphics should make use of many modes of data presentation
+  + Don't let hte tool drive the analysis
+
+Use as many different modes of evidence or displaying evidence as you can. Don't show only a plot, or a table, but use multiple to make the information as rich as possible. Advantage of R, use flexible tools. 
+
+5. Describe and document the evidence with appropriate labels, scales, sources, etc. 
+  + A data graphic should tell a complete story that is credible. 
+
+Preserve the code that made the plot and the souces of where you got the data to maintain the credibility. 
+
+6. Content is king
+  + Analytical presentation ultimately stand or fall depending on the quality, relevance, and integrity of their content. 
+
+What's the story, what's the data, whats the best way to present it? 
