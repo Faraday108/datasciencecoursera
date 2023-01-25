@@ -94,3 +94,40 @@ rug(data) plots points under the histogram, helps see outliers.
 Can change breaks on a histogram with breaks = n. Don't want bins to be too big or else its noisy, or too small or you can't see shape. 
 Can put abline on histogram too, example has two: one at max of 12 and another at median. 
 barplot() can show a graphical summary for categorical data. For example plotting over region shows number of counties in the west and east.
+
+* Two dimension: multiple/overlayed 1D plots with lattice/ggplot2, scatterplots, smooth scatterplots, overlayed/multiple 2d plots and coplots, color/size/shape to add dimension, spinning plots, actual 3d plots (not as useful). 
+
+Multiple boxplots:
+```{r, eval = FALSE}
+boxplot(pm25 ~ region, data = pollution, col = "red")
+```
+Multiple histograms: 
+```{r, eval = FALSE}
+par(mfrow(c = (2,1), mar = c(4, 4, 2, 1))
+hist(subset(pollution, region == "east")$pm25, col = "green")
+hist(subset(pollution, region == "west")$pm25, col = "green")
+```
+Scatterplot: 
+```{r, eval = FALSE}
+with(pollution, plot(latitute, pm25))
+abline(h = 12, lwd = 2, lty = 2)
+```
+Scatterplot with color: 
+```{r, eval = FALSE}
+with(pollution, plot(latitude, pm25, col = region))
+abline(h = 12, lwd = 2, lty = 2)
+```
+Multiple scatterplots: 
+```{r, eval = FALSE}
+par(mfrow = c(1,2), mar = c(5, 4, 2, 1))
+with(subset(pollution, region == "west"), plot(latitude, pm25, main = "West"))
+with(subset(pollution, region == "east"), plot(latitude, pm25, main = "East"))
+```
+
+Summary:
+
+* Exploratory plots are "quick and dirty"
+* Let you summarize the data (usually graphically) and highlight any broad features
+* Explore basic questions and hypotheses (and perhaps rule them out)
+* Suggest modeling strategies for the "next step"
+
