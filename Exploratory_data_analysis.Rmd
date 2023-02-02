@@ -436,3 +436,55 @@ Can copy a plot to another device, saving retyping of code. `dev.copy()` from on
 * For file devices: 
   + Vector formats are good for line drawings and plots with solid colors using a modest number of points
   + bitmap formats are good for plots with a large number of points, natural scenes or web-based plots
+
+## Week 2
+### Lattice Plotting System
+Often used for high dimension data and making many plots at once.  
+
+* Implemented in the *lattice* package which contains code for producing Trellis graphics which are independent of the base system. Includes functions like **xyplot**, **bwplot**, **levelplot**. 
+* *grid*: implements a different graphing system independent of base system, *lattice* builds on top of grid. Grid is seldom called directly. 
+* all plotting and annotation is done at once. 
+
+Main functions: 
+
+* `xyplot`: scatterplots
+* `bwplot`: box and whiskers
+* `histogram`: histogram
+* `stripplot`: like boxplot, but with points
+* `dotplot`: plot dots on "violin strings"
+* `splom`: scatterplot matrix; like `pairs` in base
+* `levelplot, contourplot`: for plotting image data
+
+In general, lattice functions take a formula for the argument. `xyplot(y ~ x | f * g, data)`.
+
+* Use formula notation, hence the ~
+* On the left of ~ is the y-axis variable, right is x-axis variable
+* f and g are optional conditioning variables and * indicates an interaction between the two. 
+* Second argument is the data frame or list from which variables should be looked up. 
+* If no data frame or list is passed, parent frame is used. If no other arguments are passed, defaults can be used. 
+
+Simple lattice plot
+
+```{r}
+library(lattice)
+library(datasets)
+xyplot(Ozone ~ Wind, data = airquality)
+
+# Convert Month to a factor variable
+airquality <- transform(airquality, Month = factor(Month))
+xyplot(Ozone ~ Wind | Month, data = airquality, layout = c(5,1))
+```
+
+Lattice Behavior differs from base in one critical way: 
+
+* Base plots directly to graphics device
+* Lattice return an object of class **trellis**
+* Print methods for lattice functions do work of plotting the data on graphics device. 
+* Lattice functions return "plot objects" that in principle can be stored (usually better to just save code and data). 
+* On command line, trellis objects are auto-printed so it appears the function is plotting the data. 
+
+```{r}
+p <- xyplot(Ozone ~ Wind, data = airquality) ## Nothing happens
+print(p) ## Plot appears
+```
+
