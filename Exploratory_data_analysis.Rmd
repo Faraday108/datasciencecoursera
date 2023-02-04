@@ -521,3 +521,105 @@ Summary:
 * aspects like margins and spacing are automatically handled and the defaults are usually sufficient
 * the lattice system is ideal for creating conditioning plots where you examine the same kind of plot under many different conditions
 * panel functions can be specified/customized to modify what is plotted in each of the plot panels. 
+
+## ggplot2 Plotting System
+
+What is ggplot2? A package in R implementation of the *Grammar of Graphics* that is conceptualized as a grammar where different 'nouns' and 'verbs' can be combined to create a whole unique system. It is a 'third' graphics system built on grid.  
+The grammar of graphics represents and abstraction of graphics ideas/objects. Think "verb", "noun", "adjective" for graphics. Allows for a "theory" of graphics on which to build new graphics and graphics objects. Meant to "shorten the distance from mind to page."  
+From ggplot2 book: "In brief, the grammar tells us that a statistical graphic is a **mapping** from data to **aesthetic** attributes (color, shape, size) of **geometric** objects (points, lines, bars). The plot may also contain statistical transformations of the data and is drawn on a specific coordinate system."  
+
+Basics: `qplot()`
+
+* Works much like the `plot` function in base graphics. 
+* Looks for data in a data frame, similar to lattice, or in the parent environment. Make sure data frame is organized! 
+* Plots are made up of *aesthetics* (size, shape, color) and *geoms* (points and lines). 
+* Factors are important for indicating subsets of the data (if they are to have different properties); they should be **labeled**
+* The `qplot` hides what goes on underneath, which is okay for most operations. 
+* `ggplot` is the core function and is very flexilble for doing things `qplot` cannot do. 
+
+Examples: mpg dataset
+```{r}
+library(ggplot2)
+# Notice in str that the factor labels are appropriately labeled!
+str(mpg)
+
+# The "hello world" plot
+qplot(displ, hwy, data = mpg) #specified data frame
+
+# Modifying with different aesthetics. qplot does legend and color automatically
+qplot(displ, hwy, data = mpg, color = drv)
+
+# adding a statistic. A smoothing "loess"
+qplot(displ, hwy, data = mpg, geom = c("point", "smooth"))
+
+# Histogram with qplot, 
+qplot(hwy, data = mpg, fill = drv)
+
+# Facets: variable on left (rows) and right (columns) separated by ~
+qplot(disp, hwy, data = mpg, facets = .~drv)
+
+qplot(hwy, data = mpg, facets = drv~., binwidth = 2)
+```
+
+MAACS Cohort
+Mouse allergen and asthma cohort study; data not currently available. 
+Things highlighted: 
+
+* density geom: `qplot(x, data, geom = "density")`
+* shape: `qplot(shape = factor variable)`
+* smooth with other model: `qplot(initialize) + geom_smooth(method = "lm")`
+
+Summary of `qplot`
+
+* `qplot()` is analog to `plot()` but with many build in features
+* Syntax somewhere in between base/lattice
+* Produces very nice graphics, essentially publication ready (if you like the design)
+* Difficult to go against the grain and customize (don't bother, use ggplot2 power in that case)
+
+### `ggplot`
+Basic components of `ggplot2` graphic. 
+
+* A data frame
+* **aesthetic mapping**: how data is mapped to color, size, etc
+* **geoms**: geometric objects like points, lines, shapes
+* **facets**: for conditional plots
+* **stats**: statistical transformations like binning, quantiles, smoothing
+* **scales**: what scale an aesthetic map uses (example: male = red, female = blue)
+* **coordinate system**
+
+Building plots with ggplot2: 
+
+* When building, the "artist's palette" model is closest analogy similar to plot
+* Plots are built in layers
+  + Plot the data
+  + Overlay a summary
+  + Metadata and annotation
+
+Uses mouse allergen study again (data not available :( )
+
+* Start with call to ggplot: `g <- ggplot(data, aes(x,y))`
+* Can see summary of this: `summary(g)`
+* Explicitly save and print ggplot object `p <- g + geom_point(); print(p)`
+* Don't have to save in prior step, but can be useful for saving typing. 
+* Add summaries: `+geom_smooth()` default is "loess", or `+geom_smooth(method = "lm")
+* Can add facets: ` + facet_grid(. ~ factor variable)` puts facets as one row and multiple columns. 
+  + Easier to have the metadata names etc be already appropriate as ggplot will just take these as is and you don't have to respecify. 
+
+Annotation: 
+
+* Labels: xlab(), ylab(), labs(), ggtitle()
+* Each of the "geom" functions has options to modify
+* For things that only make sense globally, use theme()
+  + `theme(legend.position = "none")`
+* Two standard appearance themes are included
+  + theme_gray(): default
+  + theme_bw(): most stark/plain
+
+Modifying aesthetics: 
+
+* color of points: `geom_point(color = "steel blue", size = 4, alpha = 1/2)`
+  + Since these are constants, they don't need to be specified in aes()
+* color of points with factor var: `geom_point(aes(color = factor var), size = 4, alpha = 1/2)`
+* modify labels: `labs(title = "TITLE") + labs(x = expression("log")) + labs(y = "Y")`
+* Customize smoohther: `geom_smooth(size = 4, linetype = 3, method = "lm", se = FALSE)`
+* Customize theme: change background to bw and font `theme_bw(base_family = "Times")`
