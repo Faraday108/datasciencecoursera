@@ -623,3 +623,30 @@ Modifying aesthetics:
 * modify labels: `labs(title = "TITLE") + labs(x = expression("log")) + labs(y = "Y")`
 * Customize smoohther: `geom_smooth(size = 4, linetype = 3, method = "lm", se = FALSE)`
 * Customize theme: change background to bw and font `theme_bw(base_family = "Times")`
+
+A note about axis limits and outliers
+If you change the y limits to be within a range as `g + geom_line() + ylim(-3, 3)`, ggplot will actually subset the data and not show outliers at all. Alternatively, you can use `g + geom_line() + coord_cartesian(ylim = c(-3,3))`. This will include the point and show the vertical lines going off the edge of he plot. 
+
+Adding complexity: How does relationship between two variables vary with two more variables? Will need to change a continuous variable to categorical with a reasonable set of ranges. 
+
+Making Tertiles: 
+
+1. Calculate deciles `cutpoints <- quantile(data, seq(0, 1, length = 4)`
+  + creates cutpoints for data with quartiles defined by sequence 0, .3, .6, 1
+2. Cut data at deciles and create new factor variable `deciles <- cut(data, cutpoints)`
+4. See levels of new factor variable `levels(deciles)`
+
+Code for a final, more complicated plot: 
+```{r, eval = FALSE}
+g <- ggplot(data, aes(x, y))
+# add layers
+
+g + geom_point(alpha = 1/3) # scatterplot with partially transparent points
+  + facet_wrap(categorical1 ~ categorical2, nrow = 2, ncol = 4) #panels with two different conditioning variables. 
+  + geom_smooth(method = "lm", se = FALSE, col = "steelblue")
+  + theme_bw(base_family = Avenir", base_size = 10)
+  + labs(x = expression("log " * PM[2.5])
+  + labs(y = "Nocturnal Symptoms")
+  + labs(title = "MAACS Cohort")
+  ```
+  
