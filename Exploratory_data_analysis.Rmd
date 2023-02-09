@@ -650,3 +650,76 @@ g + geom_point(alpha = 1/3) # scatterplot with partially transparent points
   + labs(title = "MAACS Cohort")
   ```
   
+## Week 4
+### Heirarchical Clustering
+A 'bread and butter technique' when it comes to visualizing high dimensional or multidimensional data.  
+Can we find things that are close together? Clustering organizes things that are **close** into groups. How do we define close? How do we group things? How do we visualize groups? How do we interpret the grouping?  
+Cluster analysis is important and widely used in science and other applications.  
+Heirarchical Clustering: 
+
+* An agglomerative approach
+  + Find closest two things
+  + Put them together
+  + Find next closest
+
+Requires a defined distance and a merging approach and produces a tree showing how close things are to each other.  
+Arguable the most important is how we define close. GIGO.  
+Distance or similarity? 
+
+* Continuous - euclidean distance. extends nicely to higher dimensional problems
+* Continuous - correlational similarity
+* Binary - manhattan ditance; think about walking down blocks; sum of absolute distances in each direction. 
+
+Pick one that makes sense for your problem. 
+
+Example: 
+```{r}
+set.seed(1234)
+par(mar = c(0, 0, 0, 0))
+x <- rnorm(12, mean = rep(1:3, each = 4), sd = 0.2)
+y <- rnorm(12, mean = rep(c(1,2,1), each = 4, sd = 0.2))
+plot(x,y,col = "blue", pch = 19, cex = 2)
+text(x + 0.05, y + 0.05, labels = as.character(1:12))
+```
+
+To run a heirarchical clustering model, you first need to calculate pairwise distances with `dist`
+
+```{r}
+dataFrame <- data.frame(x = x, y = y)
+distxy <- dist(dataFrame) # Euclidean default. 
+hClustering <- hclust(distxy)
+plot(hClustering)
+```
+
+As you move up the dendogram, it shows which things were clustered first. Clustering goes by pairing the closest points to a new cluster you can think of as a super point. The clustering continues till every data point is combined in the tree. If we want, we can cut the tree at different horizontal lines to get different numbers of clusters from the extreme of one giant cluster to all the original data points. 
+
+Prettier Dendrograms
+It is possible to have prettier dendograms that can be created with custom functions. Things like labels and colors of the leaves.  
+The next question is how do you merge the points? One is called average linkage, where the new coordinate is the average of the x and y coordinates. Can also use "complete linkage" 
+
+Last function: `heatmap`
+Useful for large datasets that are roughly on the same scale, a heatmap can help get a quick look. Essentially runs a heirarchical analysis on the rows and columns
+
+```{r}
+dataFrame <- data.frame(x = x, y = y)
+set.seed(143)
+dataMatrix <- as.matrix(dataFrame)[sample(1:12), ]
+heatmap(dataMatrix)
+```
+
+Rows of the table are observations and columns are sets of observations. heatmap uses clustering to organize the observations. Reorders the rows and columns according to the heirarchical ordering. This shows that the x values have three rough groups. 
+
+Notes and further resources: 
+
+* Gives an idea of hte relationships between variables/observations
+* Picture may be unstable
+  + Change a few points
+  + Have different missing values
+  + Pick a different distance
+  + Change the merging strategy
+  + Change the scale of points for one variable
+* But it is deterministic
+* Choosing where to cut isn't always obvious
+* Should be primarily used for exploration
+* Rafa's Distances and Clustering Video
+* Elements of statistical learning
