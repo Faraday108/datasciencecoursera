@@ -933,3 +933,128 @@ par(mfrow = c(1, 2))
 plot(svd1$d, xlab = "Column", ylab = "Singular Value", pch = 19)
 plot(svd1$d^2/sum(svd1$d^2), xlab = "Column", ylab = "Percent of variance Explained", pch = 19)
 ```
+
+A problem with SVD is missing values. 
+
+```{r}
+dataMatrix2 <- dataMatrixOrdered
+## Randomly insert some missing data
+dataMatrix2[sample(1:100, size = 40, replace = FALSE)] <- NA
+svd1 <- svd(scale(dataMatrix2)) # doesn't work! 
+```
+
+We need to take care of the missing values! One way is with imputing via `impute`
+
+```{r, eval = FALSE}
+library(impute) #available from http://bioconductor.org
+dataMatrix2 <- dataMatrixOrdered
+dataMatrix2[sample(1:100, size = 40, replace = FALSE)] <- NA
+# takes missing value and imputes it with k nearest neighbors
+dataMatrix2 <- impute.knn(dataMatrix2)$data
+svd1 <- svd(scale(dataMatrixOrdered)); svd2 <- svd(scale(dataMatrix2))
+par(mfrow = c(1, 2)); plot(svd1$v[, 1], pch = 19); plot(svd2$v[, 1], pch = 19)
+```
+
+Example with a face datafile:  
+```{r, eval = FALSE}
+load("data/face.rda")
+image(t(faceData)[, nrow(faceData):1])
+# Lets look at variance explained
+svd1 <- svd(scale(faceData))
+plot(svd1$d^2/sum(svd1$d^2), pch = 19, xlab = "Singular Vector", ylab = "Variance Explained")
+```
+The first 5-10 singular vectors capture most of the image so we can create an approximation of the image using these. 
+
+```{r, eval = FALSE}
+svd1 <- svd(scale(faceData))
+# Note %*% is matrix multiplication
+
+# Here svd1d[1] is a constant
+approx1 <- svd1$u[, 1] %*% t(svd1$v[, 1]) * svd1$d[1]
+
+# In these examples, we need to make the diagonal matrix out of d
+approx5 <- svd1$u[, 1:5] %*% diag(svd1$d[1:5]) %*% t(svd1$v[, 1:5])
+approx10 <- svd1$u[, 1:10] %*% diag(svd1$d[1:10]) %*% t(svd1$v[, 1:10])
+```
+
+Data compression and summarizing a dataset are two sides of the same coin. 
+
+Notes and further resources:
+
+* Scale of data matters, needs to be on same scale. 
+* PC's/SV's may mix real patterns
+* Can be computationally intensive
+* Advanced data analysis from an elementary point of view
+* Elements of statistical learning
+* Alternatives:
+  + Factor analysis
+  + Independent components analysis
+  + Latent semantic analysis
+
+## Working with color
+How to specify different colors using different palettes. Not as important as the data but can help make relationships clear. 
+
+* The default color schemes for most plots in R are not great. 
+* Recently there have been developments to improve the handling/specification of colors in plots/graphics. 
+* Functions in R and external packages that are useful
+
+Col = 1, 2, 3 (black, red, green) is easy in R but these colors aren't ideal in all circumstances.  
+Heat.colors and topo.colors are common as well.  
+
+Color Utilities in R: 
+
+* The **grDevices** package has two functions: `colorRamp` and `colorRampPalette`
+* These functions take palettes of collors and halp to interpolate between the colors. 
+* The function `colors()` lists the names of colors you can use in any plotting function.  
+
+* `colorRamp`: takes a palette of colors and returns a function that takes values between 0 and 1, indicating the extremes of the color palette
+* `colorRampPalette`: takes a palette of colors and returns a function that takes integer arguments and returns a vector of colors interpolating the palette (like `heat.colors` or `topo.colors`). 
+
+```{r}
+# Example, imagine a painters palette with a spot of red and blue
+pal <- colorRamp(c("red", "blue"))
+pal(0) #retuns 255, 0, 0 (all red)
+pal(1) # returns 0, 0, 255 (all blue)
+pal(0.5) # returns 127.5, 0, 127.5 (half and half)
+```
+
+Can also pass the function a sequence: `pal(seq(0, 1, len = 10))` and you will get a series of 10 colors mixed in different proportions.  
+
+colorRampPalette Example: 
+```{r}
+pal <- colorRampPalette(c("red", "yellow"))
+pal(2) # will return two colors in hex for the extremes in this case
+pal(10) # will return 10 colors in hex of an even spread from all red to all yellow. 
+```
+
+How do I come up with my own interesting palette of colors? You can always use what was done in prior examples, can also use `RColorBrewer` package. 
+
+* Available on CRAN, contains interesting/useful color palettes for different types of data. 
+* There are 3 types of palettes: sequential (ordered data), diverging (deviate from something such as mean), qualitative (representing non-ordered data such as factors). 
+* Palette information can be used in conjunction with `colorRamp` and `colorRampPalette`.  
+
+```{r, eval = FALSE}
+library(RColorBrewer)
+cols <- brewer.pal(3, "BuGn") # Name of palette not intuitive, look at help file
+cols
+pal <- colorRampPalette(cols)
+image(volcano, col = pal(20))
+```
+
+Smoothscatter can also use colors. Useful if you have a LOT of data and don't want a bunch of dots just overlapping each other. `smoothScatter` creates a 2d histogram
+
+```{r}
+x <- rnorm(10000)
+y <- rnorm(10000)
+smoothScatter(x, y)
+```
+
+Other Plotting Notes: 
+
+* The `rgb` function can be used to produce any color, returns a hex code. 
+* Transparency can be added via the `alpha` parameter to `rgb`. 
+* The **colorspace** package can be used for a different control over colors. 
+
+```{r}
+plot(x, y, col = rgb(0, 0, 0, 0.2), pch = 19)
+```
